@@ -1,0 +1,33 @@
+$step-card-height: 100px;
+
+.back-button,
+.button {
+  padding: 1rem;
+  background-color: hotpink;
+  color: black;
+}
+
+.back-button {
+  position: absolute;
+  top: 1rem;
+}
+
+.journey-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: aquamarine;
+  color: black;
+}
+
+.step-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: $step-card-height;
+  width: $step-card-height;
+  background-color: black;
+  color: aliceblue;
+}
