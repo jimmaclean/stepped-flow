@@ -15,10 +15,6 @@ type StepConfig = {
   };
 };
 
-interface UseJourneyProps {
-  keys: string[];
-  config: StepConfig;
-}
 interface UseJourneyResult {
   currentStepIndex: number;
   getCurrentStep: () => JSX.Element;
@@ -29,13 +25,19 @@ interface UseJourneyResult {
 
 export const useJourney = (
   keys: string[],
-  config: StepConfig
+  config: StepConfig,
+  onComplete: () => void
 ): UseJourneyResult => {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
 
   const showNextStep = () => {
-    setCurrentStepIndex(walkForwardFromIndex(currentStepIndex));
+    if (currentStepIndex === keys.length - 1) {
+      onComplete();
+    } else {
+      setCurrentStepIndex(walkForwardFromIndex(currentStepIndex));
+    }
   };
+
   const showPreviousStep = () => {
     setCurrentStepIndex(walkBackwardFromIndex(currentStepIndex));
   };

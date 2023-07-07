@@ -39,10 +39,14 @@ export const Step3: FunctionComponent<StepProps> = ({ showNextStep }) => {
   );
 };
 
-export const Step4: FunctionComponent<StepProps> = ({ restartJourney }) => {
+export const Step4: FunctionComponent<StepProps> = ({
+  showNextStep,
+  restartJourney,
+}) => {
   return (
     <div className={styles["step-card"]}>
       <h3>4</h3>
+      <NextButton showNextStep={showNextStep} />
       {restartJourney && (
         <button className={styles["button"]} onClick={() => restartJourney()}>
           Reset

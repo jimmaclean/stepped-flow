@@ -2,8 +2,11 @@
 import { Step1, Step2, Step3, Step4 } from "./Steps";
 import styles from "./Journey.module.scss";
 import { useJourney } from "./useJourney";
+import { useState } from "react";
 
 export const Journey = () => {
+  const [isComplete, setIsComplete] = useState(false);
+
   const JOURNEY_STEP_KEYS = ["step1", "step2", "step3", "step4"];
   const JOURNEY_STEP_CONFIG = {
     step1: {
@@ -40,19 +43,27 @@ export const Journey = () => {
     showNextStep,
     showPreviousStep,
     restartJourney,
-  } = useJourney(JOURNEY_STEP_KEYS, JOURNEY_STEP_CONFIG);
+  } = useJourney(JOURNEY_STEP_KEYS, JOURNEY_STEP_CONFIG, () =>
+    setIsComplete(true)
+  );
 
   return (
     <div className={styles["journey-container"]}>
-      {currentStepIndex > 0 && (
-        <button
-          className={styles["back-button"]}
-          onClick={() => showPreviousStep()}
-        >
-          Back
-        </button>
+      {isComplete ? (
+        <h2>Complete!</h2>
+      ) : (
+        <>
+          {currentStepIndex > 0 && (
+            <button
+              className={styles["back-button"]}
+              onClick={() => showPreviousStep()}
+            >
+              Back
+            </button>
+          )}
+          {getCurrentStep()}
+        </>
       )}
-      {getCurrentStep()}
     </div>
   );
 };
