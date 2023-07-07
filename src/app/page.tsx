@@ -1,5 +1,5 @@
 import styles from "./page.module.css";
-import { Journey } from "@/components/Journey/Journey";
+import { Journey } from "@/components/Journey";
 
 export default function Home() {
   return (

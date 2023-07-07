@@ -1,82 +1,58 @@
 "use client";
+import { Step1, Step2, Step3, Step4 } from "./Steps";
+import styles from "./Journey.module.scss";
+import { useJourney } from "./useJourney";
 
-import {
-  FunctionComponent,
-  PropsWithChildren,
-  ReactNode,
-  cloneElement,
-  createContext,
-  useEffect,
-  useState,
-} from "react";
-
-export type Props = PropsWithChildren<{
-  className?: string;
-  steps: JourneyStep[];
-  renderStep: (
-    step: ReactNode,
-    showStep: boolean,
-    showNextStep: () => void
-  ) => ReactNode;
-}>;
-
-type JourneyStep = {
-  showStep: () => boolean;
-  onComplete?: () => void;
-  content: ReactNode;
-};
-
-export const Journey: FunctionComponent<Props> = ({ steps, renderStep }) => {
-  const [currentStepIndex, setCurrentStepIndex] = useState(0);
-
-  const showNextStep = () => {
-    setCurrentStepIndex(currentStepIndex + 1);
+export const Journey = () => {
+  const JOURNEY_STEP_KEYS = ["step1", "step2", "step3", "step4"];
+  const JOURNEY_STEP_CONFIG = {
+    step1: {
+      component: () => <Step1 showNextStep={showNextStep} />,
+      showStep: () => true,
+      text: "Step 1",
+      analyticsEventName: "landing",
+    },
+    step2: {
+      component: () => <Step2 showNextStep={showNextStep} />,
+      showStep: () => true,
+      text: "Step 2",
+      analyticsEventName: "step-2",
+    },
+    step3: {
+      component: () => <Step3 showNextStep={showNextStep} />,
+      showStep: () => false,
+      text: "Step 3",
+      analyticsEventName: "step-3",
+    },
+    step4: {
+      component: () => (
+        <Step4 showNextStep={showNextStep} restartJourney={restartJourney} />
+      ),
+      showStep: () => true,
+      text: "Step 4",
+      analyticsEventName: "summary",
+    },
   };
-  // Run through each step and check if it should be shown
-  // If it should be shown, show it
-  // If it should not be shown, skip it
-  // If it should be shown and is the last step, show it and mark the journey as complete
-  // If it should be shown and is not the last step, show it and mark the journey as incomplete
+
+  const {
+    currentStepIndex,
+    getCurrentStep,
+    showNextStep,
+    showPreviousStep,
+    restartJourney,
+  } = useJourney(JOURNEY_STEP_KEYS, JOURNEY_STEP_CONFIG);
 
   return (
-    <>
-      {steps.map((step, index) => {
-        const showStep = index === currentStepIndex;
-        return renderStep(step.content, showStep, showNextStep);
-      })}
-    </>
-  );
-};
-
-const Step1Content = ({ showNextStep }) => {
-  return (
-    <>
-      <h3>Step 1</h3>
-      <button onClick={() => showNextStep()}>Next</button>
-    </>
-  );
-};
-const Step1: JourneyStep = {
-  showStep: () => true,
-  content: <Step1Content />,
-};
-const Step2: JourneyStep = {
-  showStep: () => true,
-  content: <div>Step 2</div>,
-};
-
-const Step3: JourneyStep = {
-  showStep: () => true,
-  content: <div>Step 3</div>,
-};
-
-export const TestJourney = () => {
-  return (
-    <Journey
-      steps={[Step1, Step2, Step3]}
-      renderStep={(step, showStep, showNextStep) => {
-        return <>{showStep && cloneElement(step, { showNextStep })}</>;
-      }}
-    />
+    <div className={styles["journey-container"]}>
+      {currentStepIndex > 0 && (
+        <button
+          className={styles["back-button"]}
+          onClick={() => showPreviousStep()}
+        >
+          Back
+        </button>
+      )}
+      {getCurrentStep()}
+    </div>
   );
 };

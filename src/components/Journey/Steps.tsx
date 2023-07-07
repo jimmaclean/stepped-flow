@@ -1,5 +1,5 @@
 import { FunctionComponent } from "react";
-import styles from "./simpleArray.module.scss";
+import styles from "./Journey.module.scss";
 import { StepProps } from "./useJourney";
 
 const NextButton: ({
