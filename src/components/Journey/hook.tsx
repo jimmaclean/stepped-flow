@@ -1,6 +1,6 @@
 "use client";
 import styles from "./simpleArray.module.scss";
-import { FunctionComponent, ReactNode, useState } from "react";
+import { FunctionComponent, useState } from "react";
 
 const NextButton: ({
   showNextStep,
@@ -59,19 +59,27 @@ const Step4: FunctionComponent<StepProps> = ({ restartJourney }) => {
 };
 
 type StepConfig = {
-  component: ReactNode;
-  showStep: () => boolean;
-  text: string;
-  analyticsEventName: string;
+  [key: string]: {
+    component: () => JSX.Element;
+    showStep: () => boolean;
+    text: string;
+    analyticsEventName: string;
+  };
 };
 
 interface UseJourneyProps {
   keys: string[];
-  key: StepConfig;
+  config: StepConfig;
 }
-interface UseJourneyResult {}
+interface UseJourneyResult {
+  currentStepIndex: number;
+  getCurrentStep: () => JSX.Element;
+  showNextStep: () => void;
+  showPreviousStep: () => void;
+  restartJourney: () => void;
+}
 
-const useJourney = (keys, config) => {
+const useJourney = (keys: string[], config: StepConfig): UseJourneyResult => {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
 
   const showNextStep = () => {
@@ -121,11 +129,11 @@ const useJourney = (keys, config) => {
     restartJourney,
   };
 };
-export const SimpleArrayJourney = () => {
+export const Journey = () => {
   const JOURNEY_STEP_KEYS = ["step1", "step2", "step3", "step4"];
   const JOURNEY_STEP_CONFIG = {
     step1: {
-      component: () => <Step1 showNextStep={showNextStep()} />,
+      component: () => <Step1 showNextStep={showNextStep} />,
       showStep: () => true,
       text: "Step 1",
       analyticsEventName: "landing",
