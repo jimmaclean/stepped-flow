@@ -38,6 +38,7 @@ export const useJourney = (
     }
   };
 
+  // TODO can fail if all old steps are locked
   const showPreviousStep = () => {
     setCurrentStepIndex(walkBackwardFromIndex(currentStepIndex));
   };
